@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: localstack
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/phuongnam195/obs-demo-stack'
+    targetRevision: HEAD
+    path: k8s/infra/localstack-manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: demo
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

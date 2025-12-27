@@ -1,0 +1,90 @@
+# --- LocalStack (SQS Emulation) ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: localstack
+  labels:
+    app: localstack
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: localstack
+  template:
+    metadata:
+      labels:
+        app: localstack
+    spec:
+      containers:
+      - name: localstack
+        image: localstack/localstack:2.0
+        ports:
+        - containerPort: 4566
+        env:
+        - name: SERVICES
+          value: "sqs"
+        - name: DEBUG
+          value: "1"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: localstack
+spec:
+  selector:
+    app: localstack
+  ports:
+  - port: 4566
+    targetPort: 4566
+
+# --- SQS Exporter (Metrics for Prometheus) ---
+# Translates SQS API stats into Prometheus metrics
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sqs-exporter
+  labels:
+    app: sqs-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sqs-exporter
+  template:
+    metadata:
+      labels:
+        app: sqs-exporter
+    spec:
+      containers:
+      - name: sqs-exporter
+        image: uzesis/sqs-exporter:latest # Lightweight SQS exporter
+        ports:
+        - containerPort: 9384
+        env:
+        - name: AWS_ACCESS_KEY_ID
+          value: "test"
+        - name: AWS_SECRET_ACCESS_KEY
+          value: "test"
+        - name: AWS_REGION
+          value: "us-east-1"
+        - name: SQS_ENDPOINT_URL
+          value: "http://localstack:4566"
+        - name: SQS_QUEUE_URL_PREFIX
+          value: "http://localstack:4566/000000000000/"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sqs-exporter
+  labels:
+    # This label ensures Prometheus Operator picks it up automatically 
+    # if you have a generic ServiceMonitor or add one later.
+    app: sqs-exporter 
+spec:
+  selector:
+    app: sqs-exporter
+  ports:
+  - port: 9384
+    targetPort: 9384
+    name: metrics

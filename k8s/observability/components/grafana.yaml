@@ -1,0 +1,57 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://grafana.github.io/helm-charts
+    chart: grafana
+    targetRevision: 7.3.0
+    helm:
+      values: |
+        adminPassword: "admin"
+        
+        # Enable sidecar to auto-import Dashboards from ConfigMaps
+        sidecar:
+          dashboards:
+            enabled: true
+            label: grafana_dashboard
+            
+        datasources:
+          datasources.yaml:
+            apiVersion: 1
+            datasources:
+            # 1. Prometheus
+            - name: Prometheus
+              type: prometheus
+              url: http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
+              isDefault: true
+              
+            # 2. Loki (Logs)
+            - name: Loki
+              type: loki
+              url: http://loki-stack.monitoring.svc.cluster.local:3100
+              jsonData:
+                derivedFields:
+                  # THE MAGIC GLUE: Links Logs -> Traces
+                  - datasourceUid: Tempo
+                    matcherRegex: "trace_id\":\"(\\w+)"
+                    name: TraceID
+                    url: "$${__value.raw}"
+                    
+            # 3. Tempo (Traces)
+            - name: Tempo
+              type: tempo
+              url: http://tempo.monitoring.svc.cluster.local:3100
+              jsonData:
+                nodeGraph:
+                  enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

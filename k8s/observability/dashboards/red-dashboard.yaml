@@ -1,0 +1,126 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: red-method-dashboard
+  namespace: monitoring
+  labels:
+    # This label matches the Grafana sidecar config we created earlier
+    grafana_dashboard: "1" 
+data:
+  red-dashboard.json: |
+    {
+      "annotations": {
+        "list": [
+          {
+            "builtIn": 1,
+            "datasource": "-- Grafana --",
+            "enable": true,
+            "hide": true,
+            "iconColor": "rgba(0, 211, 255, 1)",
+            "name": "Annotations & Alerts",
+            "type": "dashboard"
+          }
+        ]
+      },
+      "editable": true,
+      "gnetId": null,
+      "graphTooltip": 0,
+      "id": null,
+      "links": [],
+      "panels": [
+        {
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+          "id": 1,
+          "title": "Checkout API (Frontend)",
+          "type": "row"
+        },
+        {
+          "title": "Request Rate (RPS)",
+          "type": "graph",
+          "gridPos": { "h": 8, "w": 8, "x": 0, "y": 1 },
+          "datasource": "Prometheus",
+          "targets": [
+            {
+              "expr": "sum(rate(http_request_duration_seconds_count{app=\"checkout-api\"}[1m]))",
+              "legendFormat": "{{method}} {{path}}"
+            }
+          ]
+        },
+        {
+          "title": "Error Rate (5xx)",
+          "type": "graph",
+          "gridPos": { "h": 8, "w": 8, "x": 8, "y": 1 },
+          "datasource": "Prometheus",
+          "targets": [
+            {
+              "expr": "sum(rate(http_request_duration_seconds_count{app=\"checkout-api\", status=~\"5..\"}[1m]))",
+              "legendFormat": "Errors"
+            }
+          ],
+          "fieldConfig": { "defaults": { "color": { "mode": "fixed", "fixedColor": "red" } } }
+        },
+        {
+          "title": "Duration (p95 Latency)",
+          "type": "graph",
+          "gridPos": { "h": 8, "w": 8, "x": 16, "y": 1 },
+          "datasource": "Prometheus",
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{app=\"checkout-api\"}[5m])) by (le))",
+              "legendFormat": "p95"
+            }
+          ],
+          "fieldConfig": { "defaults": { "unit": "s" } }
+        },
+        {
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 9 },
+          "id": 5,
+          "title": "Inventory Service (Backend)",
+          "type": "row"
+        },
+        {
+          "title": "Request Rate (RPS)",
+          "type": "graph",
+          "gridPos": { "h": 8, "w": 8, "x": 0, "y": 10 },
+          "datasource": "Prometheus",
+          "targets": [
+            {
+              "expr": "sum(rate(http_request_duration_seconds_count{app=\"inventory-service\"}[1m]))",
+              "legendFormat": "{{method}} {{path}}"
+            }
+          ]
+        },
+        {
+          "title": "Error Rate (5xx)",
+          "type": "graph",
+          "gridPos": { "h": 8, "w": 8, "x": 8, "y": 10 },
+          "datasource": "Prometheus",
+          "targets": [
+            {
+              "expr": "sum(rate(http_request_duration_seconds_count{app=\"inventory-service\", status=~\"5..\"}[1m]))",
+              "legendFormat": "Errors"
+            }
+          ],
+          "fieldConfig": { "defaults": { "color": { "mode": "fixed", "fixedColor": "red" } } }
+        },
+        {
+          "title": "Duration (p95 Latency)",
+          "type": "graph",
+          "gridPos": { "h": 8, "w": 8, "x": 16, "y": 10 },
+          "datasource": "Prometheus",
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{app=\"inventory-service\"}[5m])) by (le))",
+              "legendFormat": "p95"
+            }
+          ],
+          "fieldConfig": { "defaults": { "unit": "s" } }
+        }
+      ],
+      "schemaVersion": 26,
+      "style": "dark",
+      "tags": ["demo", "red"],
+      "timezone": "",
+      "title": "E-Commerce Demo (RED Method)",
+      "uid": "ecommerce-red"
+    }
