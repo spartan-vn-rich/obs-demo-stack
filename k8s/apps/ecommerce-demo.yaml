@@ -80,7 +80,7 @@ spec:
         readinessProbe:
           httpGet:
             path: /healthz
-            port: inventory-service-port
+            port: 8000
           initialDelaySeconds: 5
           periodSeconds: 5
 
