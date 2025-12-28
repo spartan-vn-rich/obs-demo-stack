@@ -15,6 +15,13 @@ spec:
           username: demo_user
           password: demo_pass
           database: demo_db
+        primary:
+          initdb:
+            scripts:
+              init.sql: |
+                CREATE TABLE IF NOT EXISTS access_log (
+                  timestamp TIMESTAMP
+                );
         metrics:
           enabled: true
           serviceMonitor:

@@ -4,7 +4,7 @@ require("./otel");
 const express = require("express");
 const Redis = require("ioredis");
 const { Pool } = require("pg");
-const { SQSClient, SendMessageCommand } = require("@aws-sdk/client-sqs");
+const { SQSClient, SendMessageCommand, GetQueueAttributesCommand } = require("@aws-sdk/client-sqs");
 const { trace } = require("@opentelemetry/api");
 const client = require("prom-client");
 

@@ -3,8 +3,8 @@
 # Default target
 all: prereqs cluster build infra deploy dashboards
 	@echo "✅ Setup Complete!"
-	@echo "Run 'make forward-argocd' to access ArgoCD."
-	@echo "Wait for all ArgoCD apps to sync, then run 'make forward-grafana' to access Grafana."
+	@echo "👉 Run 'make forward-argocd' to access ArgoCD."
+	@echo "📊 Wait for all ArgoCD apps to sync, then run 'make forward-grafana' to access Grafana."
 
 help:
 	@echo "Available commands:"
