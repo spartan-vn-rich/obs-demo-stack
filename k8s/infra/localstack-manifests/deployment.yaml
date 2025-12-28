@@ -1,4 +1,13 @@
 # --- LocalStack (SQS Emulation) ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: localstack-init-scripts
+data:
+  init-sqs.sh: |
+    #!/bin/bash
+    awslocal sqs create-queue --queue-name orders-queue
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,6 +24,11 @@ spec:
       labels:
         app: localstack
     spec:
+      volumes:
+      - name: init-scripts
+        configMap:
+          name: localstack-init-scripts
+          defaultMode: 0755
       containers:
       - name: localstack
         image: localstack/localstack:2.0
@@ -25,6 +39,9 @@ spec:
           value: "sqs"
         - name: DEBUG
           value: "1"
+        volumeMounts:
+        - name: init-scripts
+          mountPath: /etc/localstack/init/ready.d
 ---
 apiVersion: v1
 kind: Service

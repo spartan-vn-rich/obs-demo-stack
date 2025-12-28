@@ -105,7 +105,7 @@ app.get("/healthz", async (req, res) => {
     }));
     res.send("ok");
   } catch (e) {
-    res.status(503).send(`not ready ${e}`);
+    res.status(503).send(`not ready, error: ${e.$response?.body || e.message}`);
   }
 });
 
