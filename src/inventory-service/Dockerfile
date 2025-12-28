@@ -1,27 +1,30 @@
-# Use a slim Python image based on Debian Bookworm
-FROM python:3.11-slim-bookworm
+# ---- Base image ----
+FROM node:20-slim
 
+# ---- App directory ----
 WORKDIR /app
 
-# Prevent Python from writing pyc files and buffering stdout
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+# ---- Environment defaults ----
+ENV NODE_ENV=production
+ENV OTEL_TRACES_EXPORTER=otlp
+ENV OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+ENV OTEL_EXPORTER_OTLP_ENDPOINT=grpc://tempo:4317
+ENV OTEL_SERVICE_NAME=inventory-service
 
-# Install system dependencies if needed (not strictly needed due to psycopg2-binary, but good practice)
-# RUN apt-get update && apt-get install -y --no-install-recommends gcc libpq-dev && rm -rf /var/lib/apt/lists/*
+# ---- Install dependencies ----
+COPY package*.json ./
+RUN npm ci --omit=dev
 
-# Install Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# ---- Copy application code ----
+COPY app.js otel.js ./
 
-# Copy application code
-COPY app.py .
-
-# Create a non-root user for security
-RUN useradd -m appuser
+# ---- Non-root user (security best practice) ----
+RUN useradd -m appuser \
+  && chown -R appuser:appuser /app
 USER appuser
 
+# ---- Expose port ----
 EXPOSE 8000
 
-# Run uvicorn server pointing to the 'app' object in 'app.py'
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+# ---- Start app ----
+CMD ["node", "app.js"]
