@@ -18,6 +18,10 @@ client.collectDefaultMetrics();
 const redis = new Redis({
   host: process.env.REDIS_HOST,
   port: 6379,
+  lazyConnect: true,
+});
+redis.on("error", (err) => {
+  console.error("Redis error:", err.message);
 });
 
 // Postgres
@@ -74,6 +78,7 @@ app.get("/data", async (req, res) => {
 
       res.json({ hits });
     } catch (err) {
+      console.error("❌ /data error:", err);
       span.recordException(err);
       span.setStatus({ code: 2, message: err.message });
       res.status(500).json({ error: err.message });
