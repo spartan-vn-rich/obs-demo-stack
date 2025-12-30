@@ -1,11 +1,3 @@
-# 1. Create the 'demo' namespace for our apps/DBs
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: demo
----
-# 2. The "App of Apps" for Infrastructure
-# Apply this file manually once: kubectl apply -f k8s/infra/project.yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -24,3 +16,5 @@ spec:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true # Automatically creates 'demo' namespace
