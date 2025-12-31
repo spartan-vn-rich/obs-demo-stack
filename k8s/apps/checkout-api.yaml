@@ -29,7 +29,7 @@ metadata:
   name: checkout-api
   namespace: demo
   labels:
-    app: inventory-service
+    app: checkout-api
 spec:
   selector:
     app: checkout-api
