@@ -14,10 +14,9 @@ spec:
         prometheus:
           enabled: true
           prometheusSpec:
-            # IMPORTANT: Allows scraping ServiceMonitors in the 'demo' namespace
-            serviceMonitorSelectorNilUsesHelmValues: false
-            serviceMonitorSelector: {}
-            serviceMonitorNamespaceSelector: {}
+            serviceMonitorSelector:
+              matchLabels:
+                release: prometheus
             
             # Reduce retention for local demo
             retention: 2d
