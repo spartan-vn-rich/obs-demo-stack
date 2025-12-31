@@ -28,6 +28,8 @@ kind: Service
 metadata:
   name: checkout-api
   namespace: demo
+  labels:
+    app: inventory-service
 spec:
   selector:
     app: checkout-api
