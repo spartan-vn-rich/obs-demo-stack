@@ -60,24 +60,25 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sqs-exporter
+  name: sqs-prometheus-exporter
   labels:
-    app: sqs-exporter
+    app: sqs-prometheus-exporter
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: sqs-exporter
+      app: sqs-prometheus-exporter
   template:
     metadata:
       labels:
-        app: sqs-exporter
+        app: sqs-prometheus-exporter
     spec:
       containers:
-      - name: sqs-exporter
-        image: jmal98/sqs-exporter:latest # Lightweight SQS exporter
+      - name: exporter
+        image: jmriebold/sqs-prometheus-exporter:latest
         ports:
-        - containerPort: 9384
+        - name: http
+          containerPort: 9708
         env:
         - name: AWS_ACCESS_KEY_ID
           value: "test"
@@ -85,21 +86,19 @@ spec:
           value: "test"
         - name: AWS_REGION
           value: "us-east-1"
-        - name: SQS_ENDPOINT_URL
-          value: "http://localstack:4566"
-        - name: SQS_QUEUE_URL_PREFIX
-          value: "http://localstack:4566/000000000000/"
+        - name: SQS_QUEUE_URLS
+          value: "http://localstack:4566/000000000000/orders-queue"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: sqs-exporter
+  name: sqs-prometheus-exporter
   labels:
-    app: sqs-exporter
+    app: sqs-prometheus-exporter
 spec:
   selector:
-    app: sqs-exporter
+    app: sqs-prometheus-exporter
   ports:
-  - port: 9384
-    targetPort: 9384
-    name: metrics
+  - port: 9708
+    targetPort: 9708
+    name: http

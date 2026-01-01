@@ -1,18 +1,18 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: sqs-exporter
+  name: sqs-prometheus-exporter
   namespace: demo
   labels:
     release: prometheus
 spec:
   selector:
     matchLabels:
-      app: sqs-exporter
+      app: sqs-prometheus-exporter
   namespaceSelector:
     matchNames:
       - demo
   endpoints:
-    - port: metrics
+    - port: http
       path: /metrics
       interval: 30s

@@ -75,6 +75,11 @@ forward-grafana:
 	@echo "   👉 Open http://localhost:3000 (User: admin / Pass: admin)"
 	@kubectl port-forward -n monitoring svc/grafana 3000:80
 
+forward-checkout:
+	@echo "🔌 Port Forwarding Checkout API..."
+	@echo "   👉 Open http://localhost:8888"
+	@kubectl port-forward -n demo svc/checkout-api 8888:80
+
 clean:
 	@echo "💥 Destroying Environment..."
 	@minikube delete
