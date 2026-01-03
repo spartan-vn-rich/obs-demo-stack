@@ -11,8 +11,6 @@ spec:
     targetRevision: 6.49.0
     helm:
       values: |
-        deploymentMode: SingleBinary
-
         loki:
           auth_enabled: false
 
@@ -32,8 +30,18 @@ spec:
                   prefix: index_
                   period: 24h
 
+        deploymentMode: SingleBinary
+
         singleBinary:
           replicas: 1
+          
+        # Disable scalable components
+        read:
+          replicas: 0
+        write:
+          replicas: 0
+        backend:
+          replicas: 0
 
         promtail:
           enabled: true

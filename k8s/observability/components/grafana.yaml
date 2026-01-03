@@ -23,7 +23,7 @@ spec:
           datasources.yaml:
             apiVersion: 1
             datasources:
-            # 1. Prometheus
+            # 1. Prometheus (Metrics)
             - name: Prometheus
               type: prometheus
               url: http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
