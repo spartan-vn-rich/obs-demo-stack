@@ -32,12 +32,12 @@ spec:
             # 2. Loki (Logs)
             - name: Loki
               type: loki
-              url: http://loki-stack.monitoring.svc.cluster.local:3100
+              url: http://loki.monitoring.svc.cluster.local:3100
               jsonData:
                 derivedFields:
                   # THE MAGIC GLUE: Links Logs -> Traces
                   - datasourceUid: Tempo
-                    matcherRegex: "trace_id\":\"(\\w+)"
+                    matcherRegex: \"trace_id\":\"(\\w+)\"
                     name: TraceID
                     url: "$${__value.raw}"
                     
