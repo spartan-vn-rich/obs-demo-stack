@@ -6,13 +6,21 @@ const Redis = require("ioredis");
 const { Pool } = require("pg");
 const { SQSClient, SendMessageCommand, GetQueueAttributesCommand } = require("@aws-sdk/client-sqs");
 const { trace } = require("@opentelemetry/api");
-const client = require("prom-client");
+const promBundle = require("express-prom-bundle");
 
 const app = express();
 const tracer = trace.getTracer("inventory-service");
 
-// Prometheus metrics
-client.collectDefaultMetrics();
+
+app.use(
+  promBundle({
+    includeMethod: true,
+    includePath: true,
+    promClient: {
+      collectDefaultMetrics: {}, // <-- use bundle's prom-client
+    },
+  })
+);
 
 // Redis
 const redis = new Redis({
@@ -86,12 +94,6 @@ app.get("/data", async (req, res) => {
       span.end();
     }
   });
-});
-
-// Prometheus endpoint
-app.get("/metrics", async (req, res) => {
-  res.set("Content-Type", client.register.contentType);
-  res.end(await client.register.metrics());
 });
 
 // Health check
