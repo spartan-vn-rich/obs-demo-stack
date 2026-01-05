@@ -60,9 +60,9 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sqs-prometheus-exporter
+  name: sqs-exporter
   labels:
-    app: sqs-prometheus-exporter
+    app: sqs-exporter
 spec:
   replicas: 1
   selector:
@@ -71,14 +71,14 @@ spec:
   template:
     metadata:
       labels:
-        app: sqs-prometheus-exporter
+        app: sqs-exporter
     spec:
       containers:
       - name: exporter
-        image: jmriebold/sqs-prometheus-exporter:latest
+        image: jmal98/sqs-exporter:0.2.0
         ports:
         - name: http
-          containerPort: 9708
+          containerPort: 9384
         env:
         - name: AWS_ACCESS_KEY_ID
           value: "test"
@@ -92,13 +92,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: sqs-prometheus-exporter
+  name: sqs-exporter
   labels:
-    app: sqs-prometheus-exporter
+    app: sqs-exporter
 spec:
   selector:
-    app: sqs-prometheus-exporter
+    app: sqs-exporter
   ports:
-  - port: 9708
-    targetPort: 9708
+  - port: 9384
+    targetPort: 9384
     name: http
