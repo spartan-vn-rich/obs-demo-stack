@@ -19,6 +19,6 @@
     "@opentelemetry/instrumentation-express": "0.57.1",
     "@opentelemetry/instrumentation-redis": "0.57.2",
     "@opentelemetry/instrumentation-pg": "0.61.2",
-    "prom-client": "^15.1.0"
+    "express-prom-bundle": "8.0.0"
   }
 }
