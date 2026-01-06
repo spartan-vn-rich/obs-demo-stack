@@ -85,7 +85,7 @@ data:
           "datasource": "Prometheus",
           "targets": [
             {
-              "expr": "sum(rate(http_request_duration_seconds{service=\"inventory-service\"}[1m]))",
+              "expr": "sum(rate(http_request_duration_seconds_bucket{service=\"inventory-service\"}[1m]))",
               "legendFormat": "{{method}} {{path}}"
             }
           ]
@@ -97,7 +97,7 @@ data:
           "datasource": "Prometheus",
           "targets": [
             {
-              "expr": "sum(rate(http_request_duration_seconds{service=\"inventory-service\", status=~\"5..\"}[1m]))",
+              "expr": "sum(rate(http_request_duration_seconds_bucket{service=\"inventory-service\", status=~\"5..\"}[1m]))",
               "legendFormat": "Errors"
             }
           ],
@@ -110,7 +110,7 @@ data:
           "datasource": "Prometheus",
           "targets": [
             {
-              "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds{service=\"inventory-service\"}[5m])) by (le))",
+              "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{service=\"inventory-service\"}[5m])) by (le))",
               "legendFormat": "p95"
             }
           ],
