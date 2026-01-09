@@ -37,7 +37,7 @@ spec:
                 derivedFields:
                   # THE MAGIC GLUE: Links Logs -> Traces
                   - datasourceUid: Tempo
-                    matcherRegex: '"trace_id":"(\w+)"'
+                    matcherRegex: \\\"trace_id\\\":\\\"(\w+)\\\"
                     name: TraceID
                     url: "$${__value.raw}"
                     

@@ -21,20 +21,6 @@ spec:
                 source_labels: [__meta_kubernetes_pod_phase]
                 regex: Pending|Succeeded|Failed
 
-            pipelineStages:
-              # Parse outer container log JSON
-              - json:
-                  expressions:
-                    log: log
-
-              # Parse inner application JSON
-              - json:
-                  source: log
-                  expressions:
-                    trace_id: trace_id
-                    level: level
-                    msg: msg
-
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
