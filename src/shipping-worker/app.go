@@ -107,5 +107,5 @@ func processMessage(ctx context.Context, tracer trace.Tracer, body *string) {
 
 	// Simulate work
 	time.Sleep(50 * time.Millisecond)
-	fmt.Printf("{\"level\":\"info\",\"msg\":\"Consumed message\",\"body\":%q}\n", *body)
+	fmt.Printf("{\"level\":\"info\",\"msg\":\"Consumed message\",\"body\":%q},\"trace_id\":\"%s\"}\n", *body, span.SpanContext().TraceID().String())
 }
