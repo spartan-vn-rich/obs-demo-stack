@@ -1,0 +1,12 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: shipping-worker-alert
+  namespace: monitoring
+spec:
+  groups:
+  - name: shipping-worker-alert
+    rules:
+    - alert: ShippingWorkerCPUHigh
+      expr: rate(container_cpu_usage_seconds_total{container="shipping-worker",image!=""}[1m]) > 0.05
+      for: 1m
