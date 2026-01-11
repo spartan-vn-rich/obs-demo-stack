@@ -7,6 +7,10 @@ A comprehensive demonstration of an observability stack (LGTM: Loki, Grafana, Te
 - CI/CD, GitOps
 - Autoscaling
 
+## Video demo
+<iframe width="560" height="315" src="https://www.youtube.com/watch?v=Qp1vybkRxfI" frameborder="0" allowfullscreen></iframe>
+- Or open this: https://youtu.be/Qp1vybkRxfI
+
 ## Architecture
 
 The application consists of three microservices simulating an e-commerce order flow:
