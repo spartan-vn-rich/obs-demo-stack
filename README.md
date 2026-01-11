@@ -2,10 +2,6 @@
 
 A comprehensive demonstration of an observability stack (LGTM: Loki, Grafana, Tempo, Mimir/Prometheus) on Kubernetes. This project is designed for DevOps learners to understand how to instrument applications, run observability infrastructure locally, and troubleshoot issues.
 
-## Video demo
-<iframe width="560" height="315" src="https://www.youtube.com/watch?v=Qp1vybkRxfI" frameborder="0" allowfullscreen></iframe>
-- Or open this: https://youtu.be/Qp1vybkRxfI
-
 ## Architecture
 
 The application consists of three microservices simulating an e-commerce order flow:
@@ -39,6 +35,9 @@ graph TD
     style Redis fill:#dfd,stroke:#333,stroke-width:2px
     style Postgres fill:#ddf,stroke:#333,stroke-width:2px
 ```
+
+## Video demo
+[![Observability Demo (vn-rich)](https://github.com/user-attachments/assets/52929263-ce03-4e46-a460-efc0b002c78b)](https://youtu.be/Qp1vybkRxfI)
 
 ## Observability Stack
 
