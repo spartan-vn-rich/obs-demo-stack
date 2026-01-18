@@ -19,7 +19,7 @@ spec:
             extraRelabelConfigs:
               - action: drop
                 source_labels: [__meta_kubernetes_pod_phase]
-                regex: Pending|Succeeded|Failed
+                regex: Pending|Succeeded
 
   destination:
     server: https://kubernetes.default.svc
